@@ -2,13 +2,13 @@ version: '3'
 services:
   db:
     image: postgres
-    container_name: microservice-db
+    container_name: skill-db
     ports:
       - '5432:5432'
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: microservice-db
+      POSTGRES_DB: skill-db
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
