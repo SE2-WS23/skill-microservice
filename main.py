@@ -1,6 +1,6 @@
 from utils.preflight import handle_preflight
 import functions_framework
-from methods.get import get
+from methods.get import get_skills, get_skill_by_id
 from methods.post import post
 
 NEED_CORS_PREFLIGHT_RESPONSE = True
@@ -38,14 +38,26 @@ def http_function(request):
     # ToDo: Set header, status_code and response. You response can have any value
     # that can be turned into a Repsonse object using `make_reponse'.
     # See more https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response
-    if request.method == "GET":
-        response, status_code, header = get(request, response, header)
-    elif request.method == "POST":
-        response, status_code, header = post(request, response, header)
-    else:
-        response = {"message": "Method not supported"}
-        status_code = 405
+    try:
+        if request.method == "GET":
+            # Check for a specific skill ID in the path
+            skill_id = request.args.get('id')
+            if skill_id:
+                response, status_code, header = get_skill_by_id(request, response, header, skill_id)
+            else:
+                response, status_code, header = get_skills(request, response, header)
 
+        elif request.method == "POST":
+            response, status_code, header = post(request, response, header)
+
+        else:
+            response = {"message": "Method not supported"}
+            status_code = 405
+
+    except Exception as e:
+        response = {"message": str(e)}
+        status_code = 500
+    
     return response, status_code, header
 
 
