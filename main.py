@@ -2,10 +2,11 @@ from utils.preflight import handle_preflight
 import functions_framework
 from methods.get import get_skills, get_skill_by_id
 from methods.post import post
+from methods.delete import delete
 
 NEED_CORS_PREFLIGHT_RESPONSE = True
 ALLOWED_ORIGINS = "*"
-SUPPORTED_METHODS = ["GET", "POST", "OPTIONS"]
+SUPPORTED_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 
 @functions_framework.http
 def http_function(request):
@@ -47,6 +48,13 @@ def http_function(request):
 
         elif request.method == "POST":
             response, status_code, header = post(request)
+
+        elif request.method == "DELETE":
+            if skill_id:
+                response, status_code, header = delete(skill_id)
+            else:
+                response = {"message": "Skill ID is missing"}
+                status_code = 400
 
         else:
             response = {"message": "Method not supported"}
