@@ -9,7 +9,10 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id   Int    @id @default(autoincrement())
-    name String
+model Skill {
+    id          Int    @id @default(autoincrement())
+    skillName   String
+    description String
+    category    String
+    level       String // (e.g., "Beginner", "Advanced")
 }
